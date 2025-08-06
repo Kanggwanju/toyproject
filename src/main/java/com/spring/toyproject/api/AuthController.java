@@ -34,8 +34,7 @@ public class AuthController {
         return ResponseEntity
                 .ok()
                 .body(
-                        ApiResponse.success("회원가입이 성공적으로 완료되었습니다."
-                                , response)
+                        ApiResponse.success("회원가입이 성공적으로 완료되었습니다.", response)
                 );
     }
 
