@@ -18,17 +18,17 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-    // jwt 설정값 읽기 클래스를 읽어들임
-    JwtProperties jwtProperties;
+    // jwt 설정값 읽기 클래스를 주입
+    private final JwtProperties jwtProperties;
 
     /**
      * JWT 토큰을 발급하는 메서드
-     * @param username - 발급대상의 사용자 이름 (유일하게 사용자를 식별할 값: 이메일, 유저 아이디 등)
+     * @param username - 발급대상의 사용자 이름 (유일하게 사용자를 식별할 값)
      * @return - JWT 토큰 문자열 (암호화됨)
      */
     public String generateToken(String username) {
 
-        Date now = new Date(); // 지금 시간
+        Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getExpiration());
 
         return Jwts.builder()
@@ -36,7 +36,7 @@ public class JwtProvider {
                 .issuedAt(now) // 언제 발급했는지
                 .expiration(expiryDate) // 언제 만료되는지
                 .issuer("Toy Project By KDT") // 발급자 정보
-                .signWith(getSigningKey())  // 서명
+                .signWith(getSigningKey())   // 서명
                 .compact();
     }
 
