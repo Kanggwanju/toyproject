@@ -2,6 +2,7 @@ import { apiService } from '../utils/api.js';
 import { utils } from '../utils/util.js';
 import { authService } from '../utils/auth.js';
 
+
 // 로그인 관련 함수들의 모음
 const LoginPage = () => {
 
@@ -23,11 +24,7 @@ const LoginPage = () => {
       // 전달받은 토큰을 브라우저 스토리지에 안전하게 저장
       // localStorage    : 자동 로그인 1일 구현
       // sessionStorage  : 브라우저를 닫을때까지 로그인 유지
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-
-      // header의 인증 UI 업데이트
-      authService.updateHeaderUI();
+      authService.login(response.data.token, JSON.stringify(response.data.user));
 
       utils.showMessage(response.message, 'success');
       utils.redirectTo('/', 1000);
@@ -43,7 +40,6 @@ const LoginPage = () => {
 
   // 초기화 함수
   const init = () => {
-    // console.log('로그인 JS가 로딩되었습니다.');
     state.$form = document.getElementById('loginForm');
     bindEvents();
   };
