@@ -105,6 +105,6 @@ public class UserService {
     }
 
     public boolean checkDuplicateEmail(String email) {
-        return userRepository.existsByUsername(email);
+        return userRepository.existsByEmail(email);
     }
 }

@@ -78,7 +78,7 @@ public class AuthController {
     @GetMapping("/check-email")
     public ResponseEntity<?> checkEmail(@RequestParam String email) {
 
-        boolean exists = userService.checkDuplicateUsername(email);
+        boolean exists = userService.checkDuplicateEmail(email);
 
         return ResponseEntity.ok()
                 .body(ApiResponse.success(
