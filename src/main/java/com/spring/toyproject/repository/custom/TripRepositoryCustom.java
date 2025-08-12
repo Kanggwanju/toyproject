@@ -23,18 +23,16 @@ public interface TripRepositoryCustom {
     @Builder
     class TripSearchCondition {
 
-        private TripStatus status;  // 여행 상태로 검색
+        private TripStatus status; // 여행 상태로 검색
         private String destination; // 목적지로 검색
         private String title;       // 제목으로 검색
 
         // 정렬 조건
         @Builder.Default
-        private String sortBy = "createdAt"; // createdAt, startDate, endDate, budget, title
+        private String sortBy = "createdAt"; // createdAt, startDate, endDate, destination, title
 
         // 내림차 오름차 여부
         @Builder.Default
         private String sortDirection = "DESC"; // ASC, DESC
-        
     }
-
 }
