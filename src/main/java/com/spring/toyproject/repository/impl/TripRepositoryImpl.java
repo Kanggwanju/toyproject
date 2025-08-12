@@ -3,7 +3,6 @@ package com.spring.toyproject.repository.impl;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.spring.toyproject.domain.entity.QTrip;
 import com.spring.toyproject.domain.entity.Trip;
 import com.spring.toyproject.domain.entity.User;
 import com.spring.toyproject.repository.custom.TripRepositoryCustom;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,14 +24,14 @@ import static com.spring.toyproject.domain.entity.QTrip.trip;
 @Repository
 @Slf4j
 @RequiredArgsConstructor
-public class TripRepositoryImp implements TripRepositoryCustom {
+public class TripRepositoryImpl implements TripRepositoryCustom {
 
     private final JPAQueryFactory factory;
-//    private final JdbcTemplate template; // jdbc 사용
-    
-    @Override
-    public Page<Trip> findTripsByUser(User user, TripSearchCondition condition, Pageable pageable) {
 
+    @Override
+    public Page<Trip> getTripList(User user, TripSearchCondition condition, Pageable pageable) {
+
+        log.info("\n\nfindTripsByUser call by QueryDSL");
         /*
             SELECT *
             FROM trips
@@ -42,20 +40,19 @@ public class TripRepositoryImp implements TripRepositoryCustom {
                 AND destination LIKE ...
             ORDER BY ??? ASC??
          */
-        
+
         // WHERE절 동적으로 만들기
         BooleanBuilder whereClause = new BooleanBuilder();
         whereClause.and(trip.user.eq(user));
-        
+
         // 나머지는 검색조건 동적으로 생성
         // 1. 상태 검색
         if (condition.getStatus() != null) {
             whereClause.and(trip.status.eq(condition.getStatus()));
         }
-
         // 2. 목적지 검색
         if (condition.getDestination() != null && !condition.getDestination().trim().isEmpty()) {
-            // contains - LIKE %?%,  IgnoreCase LOWER()
+            // contains - LIKE %?% ,  IgnoreCase LOWER()
             // AND destination LIKE LOWER('%검색어%')
             whereClause.and(trip.destination.containsIgnoreCase(condition.getDestination()));
         }
@@ -64,7 +61,6 @@ public class TripRepositoryImp implements TripRepositoryCustom {
         if (condition.getTitle() != null && !condition.getTitle().trim().isEmpty()) {
             whereClause.and(trip.title.containsIgnoreCase(condition.getTitle()));
         }
-
 
         // 여행 목록 조회
         List<Trip> tripList = factory
@@ -91,7 +87,7 @@ public class TripRepositoryImp implements TripRepositoryCustom {
 
         // 정렬조건
         String sortBy = condition.getSortBy();
-        // 정렬 방향
+        // 정렬방향
         String sortDirection = condition.getSortDirection();
 
         OrderSpecifier<?> specifier;

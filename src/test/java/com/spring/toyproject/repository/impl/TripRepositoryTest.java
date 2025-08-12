@@ -6,25 +6,25 @@ import com.spring.toyproject.domain.entity.User;
 import com.spring.toyproject.repository.base.TripRepository;
 import com.spring.toyproject.repository.base.UserRepository;
 import com.spring.toyproject.repository.custom.TripRepositoryCustom;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@DataJpaTest
-@ActiveProfiles("test")
+@SpringBootTest
+@Transactional
+@Rollback(false)
 class TripRepositoryTest {
 
     @Autowired
@@ -99,12 +99,13 @@ class TripRepositoryTest {
         // 검색 조건
         TripRepositoryCustom.TripSearchCondition condition
                 = TripRepositoryCustom.TripSearchCondition.builder()
-                .sortBy("createdAt")
+                .title("강릉")
+                .sortBy("endDate")
                 .sortDirection("DESC")
                 .build();
 
         //when
-        Page<Trip> tripPage = tripRepository.findTripsByUser(testUser, condition, pageable);
+        Page<Trip> tripPage = tripRepository.getTripList(testUser, condition, pageable);
         // 실제 데이터 꺼내기
         List<Trip> tripList = tripPage.getContent();
         //then
@@ -119,5 +120,23 @@ class TripRepositoryTest {
         // 총 페이지 수는 2페이지까지 있을 것이다.
         assertThat(tripPage.getTotalPages()).isEqualTo(2);
     }
+
+
+    @Test
+    @DisplayName("여행 상태 변경 테스트")
+    void updateTripsStatus() {
+        //given
+        Trip trip = tripRepository.findById(testTrip3.getId()).orElseThrow();
+        //when
+        trip.updateStatus(TripStatus.ONGOING);
+        tripRepository.save(trip);
+
+        //then
+        Trip updatedTrip = tripRepository.findById(testTrip3.getId()).orElseThrow();
+        System.out.println("updatedTrip = " + updatedTrip);
+
+        assertThat(updatedTrip.getStatus()).isEqualTo(TripStatus.ONGOING);
+    }
+
 
 }
