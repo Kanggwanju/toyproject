@@ -1,17 +1,33 @@
 import { authService } from './utils/auth.js';
+import { PAGE_CONFIG } from './config/routes-config.js';
 
 /**
  * 우리 앱의 진입점 JS 파일
  */
 
+
+/**
+ * 라우트 가드 함수
+ * @param requiresAuth - 이 페이지 진입에 로그인이 필요한지 여부
+ * @return true일경우 페이지 진입 허용, false일경우 로그인 페이지로 튕겨내기
+ */
+
+const checkRouteAccess = (requiresAuth) => {
+  // requiresAuth는 정적으로 페이지 진입이 인증이 필요한지를 표현하는 변수
+  // 동적으로는 로그인이되었을 때 가드처리를 수행하면 안된다
+  if (requiresAuth && !authService.isAuthenticated()) {
+    // 가드 처리
+    window.location.href = '/login';
+    return false;
+  }
+  return true;
+};
+
+
 // 현재 페이지 확인 함수
 const getCurrentPage = () => {
   const path = window.location.pathname;
-  if (path === '/login') return 'login';
-  if (path === '/signup') return 'signup';
-  if (path === '/dashboard') return 'dashboard';
-  if (path === '/') return 'home';
-  return 'default';
+  return PAGE_CONFIG[path];
 };
 
 const App = () => {
@@ -20,6 +36,11 @@ const App = () => {
   // 현재 어떤 페이지에 진입했는지 알아야 그에 맞는 JS를 가져올 수 있음
   const currentPage = getCurrentPage();
   // console.log(`currentPage: ${currentPage}`);
+
+  // 라우트 가드 처리
+  if (!checkRouteAccess(currentPage.requiresAuth)) {
+    return;
+  }
 
   // 공통 이벤트 바인딩
   const bindEvents = () => {
@@ -41,7 +62,7 @@ const App = () => {
       // 앱의 공통 이벤트 바인딩
       bindEvents();
 
-      const module = await import(`./pages/${currentPage}.js`);
+      const module = await import(`./pages/${currentPage.module}.js`);
       // console.log(module);
 
       if (module) {
@@ -52,7 +73,7 @@ const App = () => {
       }
 
     } catch(error) {
-      console.error(`페이지 모듈 ${currentPage} 로드 실패!`, error);
+      console.error(`페이지 모듈 ${currentPage.module} 로드 실패!`, error);
     }
   };
 
@@ -60,8 +81,12 @@ const App = () => {
 };
 
 
+
 // 기본 JavaScript 파일
 document.addEventListener('DOMContentLoaded', () => {
+
+  // 라우트 가드 체크 (인증되지 않은 사용자가 접근할 수 없는 페이지에 로그인페이지로 리다이렉팅)
+
   App();
   // console.log('여행 기록 관리 시스템이 로드되었습니다.');
 });
