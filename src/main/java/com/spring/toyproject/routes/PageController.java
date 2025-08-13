@@ -14,29 +14,25 @@ public class PageController {
 
     // 홈으로 이동
     @GetMapping("/")
-    public String home() {
-        return "index";
-    }
+    public String home() { return "index"; }
+
     // 로그인페이지으로 이동
     @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
+    public String login() { return "login"; }
+
     // 회원가입 페이지로 이동
     @GetMapping("/signup")
-    public String signup() {
-        return "signup";
-    }
+    public String signup() { return "signup"; }
     
     // 대시보드 페이지로 이동
     @GetMapping("/dashboard")
-    public String dashboard() {
-        return "dashboard";
-    }
+    public String dashboard() { return "dashboard"; }
 
     // 여행목록 페이지로 이동
     @GetMapping("/trips")
-    public String trips() {
-        return "trip-list";
-    }
+    public String trips() { return "trip-list"; }
+
+    // 여행등록 페이지로 이동
+    @GetMapping("/trips/new")
+    public String tripForm() { return "trip-form"; }
 }

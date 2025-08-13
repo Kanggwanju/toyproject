@@ -48,6 +48,8 @@ public class SecurityConfig {
                                         "/"
                                         , "/login"
                                         , "/signup"
+                                        , "/trips/**"
+                                        , "/dashboard"
                                 ).permitAll()
                                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()

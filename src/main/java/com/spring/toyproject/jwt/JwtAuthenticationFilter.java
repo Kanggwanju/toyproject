@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = extractTokenFromHeader(request);
 
             // 서명, 토큰 위조 검사
-            if (jwtProvider.validateToken(token)) {
+            if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
                 // 토큰에서 사용자명을 추출
                 String username = jwtProvider.getUsernameFromToken(token);
 
