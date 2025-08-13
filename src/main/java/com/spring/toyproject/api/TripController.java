@@ -2,11 +2,17 @@ package com.spring.toyproject.api;
 
 import com.spring.toyproject.domain.dto.common.ApiResponse;
 import com.spring.toyproject.domain.dto.request.TripRequest;
+import com.spring.toyproject.domain.dto.request.TripSearchRequestDto;
+import com.spring.toyproject.domain.dto.response.TripListItemDto;
 import com.spring.toyproject.domain.entity.Trip;
+import com.spring.toyproject.repository.custom.TripRepositoryCustom;
 import com.spring.toyproject.service.TripService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +46,25 @@ public class TripController {
                                 , response
                         )
                 );
+    }
+
+    /**
+     * 사용자별 여행 목록 조회 API (동적 쿼리)
+     * GET /api/trips
+     */
+    @GetMapping
+    public ResponseEntity<ApiResponse<Page<TripListItemDto>>> getUserTrips(
+            @AuthenticationPrincipal String username,
+            TripSearchRequestDto request) {
+
+        log.info("사용자별 여행 목록 조회 API 호출 - 사용자: {}, 페이지: {}, 크기: {}",
+                username, request.getPage(), request.getSize());
+
+
+        TripRepositoryCustom.TripSearchCondition condition = request.toCondition();
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize());
+        Page<TripListItemDto> trips = tripService.getUserTripsList(username, condition, pageable);
+
+        return ResponseEntity.ok(ApiResponse.success("여행 정보 목록이 조회되었습니다.", trips));
     }
 }
