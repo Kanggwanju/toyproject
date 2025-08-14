@@ -35,4 +35,10 @@ public class PageController {
     // 여행등록 페이지로 이동
     @GetMapping("/trips/new")
     public String tripForm() { return "trip-form"; }
+
+    // 여행 일지등록 페이지
+    @GetMapping("/travel-logs/new")
+    public String travelForm() {
+        return "travel-log-form";
+    }
 }
