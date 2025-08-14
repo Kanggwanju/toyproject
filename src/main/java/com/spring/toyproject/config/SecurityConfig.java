@@ -29,12 +29,12 @@ public class SecurityConfig {
         http
                 // CSRF 공격 설정 off - JWT 인증방식 방해
                 .csrf(AbstractHttpConfigurer::disable)
-                // CORS 설정 off - 우리가 따로 나중에 수동설정할 예정
+                // CORS 설정 off - 우리가 따로 나중에 수동설정
                 .cors(cors -> cors.configure(http))
                 // 세션 관리 설정을 JWT에 맞게 함
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // 로그인 기본 폼 제거
+                //  로그인 기본 폼 제거
                 .formLogin(AbstractHttpConfigurer::disable)
                 // 기본 인증 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -51,7 +51,8 @@ public class SecurityConfig {
                                         , "/trips/**"
                                         , "/dashboard"
                                 ).permitAll()
-                                .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                                .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll()
+                                .requestMatchers("/css/**", "/js/**", "/images/**", "/favicon.ico", "/uploads/**").permitAll()
                                 .requestMatchers("/api/auth/**").permitAll()
 
                                 // 인증 및 권한이 필요한 경로
