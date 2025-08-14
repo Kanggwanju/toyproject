@@ -63,7 +63,6 @@ public class TripService {
         return savedTrip;
     }
 
-
     /**
      * 목록 화면 전용: 최소 필드만 포함한 DTO로 반환
      */

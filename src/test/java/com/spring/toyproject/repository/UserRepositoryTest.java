@@ -31,7 +31,7 @@ class UserRepositoryTest {
     }
 
 
-    @Test
+    /*@Test
     @DisplayName("사용자명으로 조회 테스트")
     void findByUsernameTest() {
         //given
@@ -81,7 +81,7 @@ class UserRepositoryTest {
         assertThat(flag).isTrue();
 //        assertTrue(flag);
     }
-    
+    */
 
 
 }

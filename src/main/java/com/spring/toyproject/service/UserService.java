@@ -40,15 +40,14 @@ public class UserService {
     public UserResponse signup(SignUpRequest requestDto) {
 
         // 사용자명 중복 체크
-        if(userRepository.existsByUsername(requestDto.getUsername())) {
-//            throw new BusinessException("사용자명이 중복되었습니다.", 404, "not found");
+        if (userRepository.existsByUsername(requestDto.getUsername())) {
             throw new BusinessException(ErrorCode.DUPLICATE_USERNAME);
         }
         // 이메일 중복 체크
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new BusinessException(ErrorCode.DUPLICATE_EMAIL);
         }
-        
+
         // 패스워드를 해시로 암호화
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
@@ -59,7 +58,7 @@ public class UserService {
                 .password(encodedPassword)
                 .build();
 
-        // db에 insert 명령
+        // db에 insert명령
         User saved = userRepository.save(user);
         log.info("새로운 사용자 가입: {}", saved);
 
@@ -73,6 +72,7 @@ public class UserService {
 
         // 사용자 조회 (사용자명인지 이메일인지 아직 모름)
         String inputAccount = loginRequest.getUsernameOrEmail();
+
         User user = userRepository.findByUsername(inputAccount)
                 .orElseGet(() -> userRepository.findByEmail(inputAccount)
                         .orElseThrow(
@@ -83,7 +83,7 @@ public class UserService {
         // 비밀번호 검증
         // 사용자가 입력한 패스워드 ( 평문 )
         String inputPassword = loginRequest.getPassword();
-        
+
         // DB에 저장된 패스워드 ( 암호문 )
         String storedPassword = user.getPassword();
 
@@ -91,7 +91,7 @@ public class UserService {
         if (!passwordEncoder.matches(inputPassword, storedPassword)) {
             throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
-        
+
         // 로그인 성공시 해야할 로직 - 토큰 발급
         String token = jwtProvider.generateToken(user.getUsername());
         log.info("사용자 로그인: {}", user.getUsername());
@@ -99,6 +99,7 @@ public class UserService {
         // 발급 후? -> 클라이언트에게 전송
         return AuthResponse.of(token, UserResponse.from(user));
     }
+
 
     public boolean checkDuplicateUsername(String username) {
         return userRepository.existsByUsername(username);

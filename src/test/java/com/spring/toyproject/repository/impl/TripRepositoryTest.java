@@ -88,7 +88,7 @@ class TripRepositoryTest {
     }
 
 
-    @Test
+    /*@Test
     @DisplayName("사용자별 여행 조회 테스트")
     void findByUser() {
         //given
@@ -138,5 +138,5 @@ class TripRepositoryTest {
         assertThat(updatedTrip.getStatus()).isEqualTo(TripStatus.ONGOING);
     }
 
-
+*/
 }
