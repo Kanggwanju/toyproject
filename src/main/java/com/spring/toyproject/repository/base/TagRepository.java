@@ -4,6 +4,7 @@ import com.spring.toyproject.domain.entity.Tag;
 import com.spring.toyproject.domain.entity.TagCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,4 +24,9 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
      * 카테고리별 태그 목록 조회
      */
     List<Tag> findByCategoryOrderByName(TagCategory category);
+
+    /**
+     * 태그 이름이 포함된 태그 목록 조회
+     */
+    List<Tag> findByNameContainingOrderByName(String keyword);
 }
