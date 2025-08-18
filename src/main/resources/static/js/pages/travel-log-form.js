@@ -61,7 +61,8 @@ const TravelLogFormPage = () => {
     }
     // 1. 해시 태그 INSERT
     await ensureNewTagsCreated();
-
+    
+    // 2. 여행 일지 INSERT를 위한 페이로드 작성
     const payload = {
       title: $.$title.value.trim(),
       content: $.$content.value || null,
@@ -344,6 +345,7 @@ const TravelLogFormPage = () => {
         $.$tagSuggestions.style.display = 'none';
         return;
       }
+      // 해시태그에 있는 # 을 제거하는 코드
       const keyword = value.slice(1);
       if (!keyword) {
         showSuggestions(cachedCategoryTags);

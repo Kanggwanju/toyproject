@@ -37,4 +37,16 @@ public class TagController {
         );
     }
 
+    /**
+     * 카테고리로 해시태그 목록을 조회하는 API
+     * GET /api/tags?category={category}
+     */
+    @GetMapping
+    public ResponseEntity<?> getTagsByCategory(@RequestParam(name = "category") TagCategory category) {
+        List<TagResponseDto> list = tagService.getTagsByCategory(category);
+        return ResponseEntity.ok(
+                ApiResponse.success("해시태그 목록이 조회됨", list)
+        );
+    }
+
 }

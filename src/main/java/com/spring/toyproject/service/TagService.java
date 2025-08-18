@@ -46,4 +46,14 @@ public class TagService {
         return TagResponseDto.from(savedTag);
     }
 
+    // 카테고리로 해시태그 목록 가져오기
+    @Transactional(readOnly = true)
+    public List<TagResponseDto> getTagsByCategory(TagCategory category) {
+
+        return tagRepository.findByCategoryOrderByName(category)
+                .stream()
+                .map(TagResponseDto::from)
+                .collect(Collectors.toList());
+    }
+
 }
