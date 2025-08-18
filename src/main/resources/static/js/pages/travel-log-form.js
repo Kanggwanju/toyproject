@@ -26,7 +26,7 @@ const TravelLogFormPage = () => {
     $thumbList: null,
   };
 
-  // 앱의 상태유지를 위한 전역변수 대역
+  // 앱의 상태유지를 위한 전역변수 대용 데이터
   const state = { selectedTags: [], images: [] };
 
   const initElements = () => {
@@ -54,15 +54,15 @@ const TravelLogFormPage = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    const tripId = parseInt(new URLSearchParams(window.location.search).get('tripId'));
-    console.log('tripId : ' + tripId);
+    const tripId = parseInt(new URLSearchParams(window.location.search).get('tripId'))
+    console.log('tripId: ', tripId);
     if (!tripId) {
       showAlert('유효하지 않은 접근입니다.');
       return;
     }
     // 1. 해시 태그 INSERT
     await ensureNewTagsCreated();
-    
+
     // 2. 여행 일지 INSERT를 위한 페이로드 작성
     const payload = {
       title: $.$title.value.trim(),
@@ -164,12 +164,11 @@ const TravelLogFormPage = () => {
 
     const remain = 5 - state.images.length;
 
-    // 남은 자리만큼만 파일을 슬라이스
     const toAdd = files.slice(0, Math.max(0, remain));
 
     toAdd.forEach((file) => {
       if (!file.type.startsWith('image/')) return;
-      // 썸네일에서 img src 속성에 넣기위한 변환작업
+      // 썸네일에서 img src속성에 넣기위한 변환작업
       const url = URL.createObjectURL(file);
       state.images.push({ file, url });
     });
@@ -216,6 +215,7 @@ const TravelLogFormPage = () => {
             $.$logDate.value = $.$daySelect.value;
           }
           // 변경 시 날짜 반영
+          // 변경 시 날짜 반영
           $.$daySelect.addEventListener('change', () => {
             $.$logDate.value = $.$daySelect.value || '';
           });
@@ -233,7 +233,6 @@ const TravelLogFormPage = () => {
 
     // 이미지 업로드 이벤트
     $.$imageInput?.addEventListener('change', onImageInputChange);
-
 
 
     if ($.$back) {
@@ -361,6 +360,7 @@ const TravelLogFormPage = () => {
       e.preventDefault();
       const inputVal = ($.$tagInput.value || '').trim();
       if (!inputVal.startsWith('#')) return;
+
       const name = inputVal.slice(1).trim();
       if (!name) return;
       const category = $.$tagCategorySelect.value;
@@ -407,7 +407,7 @@ const TravelLogFormPage = () => {
     // 별점 선택
     const paintStars = (value) => {
       if (!$.$ratingStars) return;
-      [...$.$ratingStars.querySelectorAll('i')].forEach((별) => {
+      [...$.$ratingStars.querySelectorAll('i')].forEach((star) => {
         const v = parseInt(star.dataset.value);
         if (v <= value) {
           star.classList.remove('bi-star');
