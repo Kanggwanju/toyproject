@@ -62,6 +62,9 @@ public class TravelLog {
     @OneToMany(mappedBy = "travelLog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TravelLogTag> travelLogTags = new ArrayList<>();
 
+    @OneToMany(mappedBy = "travelLog", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TravelPhoto> travelPhotos = new ArrayList<>();
+
     @Builder
     public TravelLog(Trip trip, String title, String content, LocalDate logDate,
                      String location, String mood, Long expenses, Integer rating) {
