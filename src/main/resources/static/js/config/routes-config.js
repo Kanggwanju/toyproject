@@ -42,4 +42,9 @@ export const PAGE_CONFIG = {
     module: 'travel-log-list',
     requiresAuth: true
   },
+
+  '/travel-logs/detail': {
+    module: 'travel-log-detail',
+    requiresAuth: true
+  },
 };
