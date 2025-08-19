@@ -37,4 +37,9 @@ export const PAGE_CONFIG = {
     module: 'travel-log-form',
     requiresAuth: true
   },
+
+  '/travel-logs': {
+    module: 'travel-log-list',
+    requiresAuth: true
+  },
 };
